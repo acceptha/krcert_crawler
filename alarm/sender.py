@@ -1,7 +1,7 @@
 import abc
 
 
-class MessengerBase:
+class SenderBase:
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -9,5 +9,5 @@ class MessengerBase:
         pass
 
     @abc.abstractmethod
-    def post_notice(self, text):
+    def send_notice(self, content):
         pass

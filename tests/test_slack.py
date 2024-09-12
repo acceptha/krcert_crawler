@@ -18,7 +18,7 @@ def test_get_last_notice():
         print(e)
 
 
-def test_post_notice():
+def test_send_notice():
     client = WebClient(KrCertBot.BOT_TOKEN)
     channel = KrCertBot.TEST_CHANNEL
     text = """

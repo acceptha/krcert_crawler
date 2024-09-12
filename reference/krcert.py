@@ -75,3 +75,10 @@ def get_link_page_content(url) -> str:
                     result.extend(table[table_key])
 
     return '\n'.join(result)
+
+
+def get_html_of_link_page(url):
+    response = urlopen(url=url)
+    html = BeautifulSoup(markup=response, features='html.parser')
+    html_parser = html.find('div', {'class': 'content_html'})
+    return str(html_parser)

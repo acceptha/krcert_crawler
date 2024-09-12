@@ -1,30 +1,29 @@
 from slack_sdk import WebClient
 
-from alarm.message import MessengerBase
+from alarm.sender import SenderBase
 from alarm.config import KrCertBot
 
 
-class SlackMessenger(MessengerBase):
+class SlackSender(SenderBase):
     def __init__(self):
-        super().__init__()
         self.client = WebClient(KrCertBot.BOT_TOKEN)
         self.channel = KrCertBot.MAIN_CHANNEL
         self.bot = 'U07BKQ7BDB5'
 
-    def get_last_notice(self, bot='U07BKQ7BDB5'):
+    def get_last_notice(self):
         try:
             history = self.client.conversations_history(channel=self.channel, limit=10)
             for msg in history.data['messages']:
-                if msg['user'] == bot:
+                if msg['user'] == self.bot:
                     return msg['text']
             raise Exception("Nothing message")
         except Exception as e:
             print(e)
             return ''
 
-    def post_notice(self, text):
+    def send_notice(self, content):
         try:
-            result = self.client.chat_postMessage(channel=self.channel, text=text)
+            result = self.client.chat_postMessage(channel=self.channel, text=content)
             return result
         except Exception as e:
             print(e)

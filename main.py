@@ -1,13 +1,13 @@
 import re
 
-from alarm.slack import SlackMessenger
+from alarm.slack_service import SlackSender
 from reference.krcert import get_recent_krcert_info
 
 
 def send_notification_to_slack():
     pre_date = ''
 
-    sm = SlackMessenger()
+    sm = SlackSender()
     last_notice = sm.get_last_notice()
     regex = re.search(r'&lt;(?P<date>\d+-\d+-\d+)&gt;$', last_notice, re.M)
     if regex:

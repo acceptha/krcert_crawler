@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 
-def test_iter_recent_krcert_info():
+def test_get_recent_krcert_info():
     info = dict(
         title='',
         date='',
@@ -77,3 +77,14 @@ def test_get_link_page_content():
                     result.extend(table[table_key])
 
         print('\n'.join(result))
+
+
+def test_get_html_of_link_page():
+    # url = 'https://www.krcert.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=71543'
+    url = 'https://www.krcert.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000133&searchWrd=&menuNo=205020&pageIndex=1&categoryCode=&nttId=71540'
+
+    response = urlopen(url=url)
+    html = BeautifulSoup(markup=response, features='html.parser')
+    html_parser = html.find('div', {'class': 'content_html'})
+    rs = str(html_parser)
+    print(rs)
