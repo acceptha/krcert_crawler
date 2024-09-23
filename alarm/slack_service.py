@@ -21,9 +21,25 @@ class SlackSender(SenderBase):
             print(e)
             return ''
 
-    def send_notice(self, content):
+    def send_notice(self, krcert_info):
         try:
-            result = self.client.chat_postMessage(channel=self.channel, text=content)
+            sequence = ['title', 'content', 'link', 'date', ]
+            message = ''
+            for key in sequence:
+                if key == 'title':
+                    message += f"📢 *{krcert_info[key]}* 📢\n\n"
+                elif key == 'date':
+                    message += f"<{krcert_info[key]}>"
+                else:
+                    message += f"{krcert_info[key]}\n\n"
+
+            self.post_message(text=message)
+        except Exception as e:
+            print(e)
+
+    def post_message(self, text):
+        try:
+            result = self.client.chat_postMessage(channel=self.channel, text=text)
             return result
         except Exception as e:
             print(e)

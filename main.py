@@ -1,35 +1,35 @@
 import re
 
 from alarm.slack_service import SlackSender
-from reference.krcert import get_recent_krcert_info
+from reference.krcert import iter_recent_krcert_info
 
 
 def send_notification_to_slack():
-    pre_date = ''
+    posting_info = []
 
     sm = SlackSender()
     last_notice = sm.get_last_notice()
-    regex = re.search(r'&lt;(?P<date>\d+-\d+-\d+)&gt;$', last_notice, re.M)
+
+    link_id_pattern = re.compile(r'nttid=(\d+)', re.M | re.I)
+    regex = link_id_pattern.search(last_notice)
     if regex:
-        pre_date = regex.group('date')
+        pre_link_id = regex.group(1)
+    else:
+        pre_link_id = 0
 
-    is_update = False
-    post_info = get_recent_krcert_info()
-    if pre_date == post_info['date']:
-        is_update = True
+    for krcert_info in iter_recent_krcert_info():
+        regex = link_id_pattern.search(krcert_info['link'])
+        post_link_id = regex.group(1)
+        if pre_link_id and pre_link_id == post_link_id:
+            break
+        elif not pre_link_id and posting_info:
+            # break
+            posting_info.append(krcert_info.copy())
+        else:
+            posting_info.append(krcert_info.copy())
 
-    if not is_update:
-        sequence = ['title', 'link', 'date', 'content']
-        message = ''
-        for key in sequence:
-            if key == 'title':
-                message += f"📢: {post_info[key]}\n"
-            elif key == 'date':
-                message += f"<{post_info[key]}>"
-            else:
-                message += f"{post_info[key]}\n"
-
-        sm.post_notice(message)
+    for info in reversed(posting_info):
+        sm.send_notice(info)
 
 
 if __name__ == '__main__':
