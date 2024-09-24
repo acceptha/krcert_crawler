@@ -25,7 +25,7 @@ class SlackSender(SenderBase):
         try:
             sequence = ['title', 'content', 'link', 'date', ]
             message = ''
-            for key in sequence:
+            for key in filter(lambda x: krcert_info.get(x), sequence):
                 if key == 'title':
                     message += f"📢 *{krcert_info[key]}* 📢\n\n"
                 elif key == 'date':

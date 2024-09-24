@@ -58,21 +58,15 @@ def test_get_link_page_content():
             block = block.group(1)
             for i, line in enumerate(map(lambda x: x.strip(), block.split(' o '))):
                 if i == 0:
-                    if table_index in table and table[table_index]['column'][0] in line:
-                        idx = line.index(table[table_index]['column'][0])
-                        table_index += 1
-                    else:
-                        idx = None
-                    name = line[:idx].strip()
-
-                    if name.split()[0] in ('문의사항', '참고사이트', '작성:', '영향받는'):
-                        break
-                    else:
+                    name = line.strip()
+                    if name in ('개요', '설명'):
                         result.append(f":white_medium_square: {name}")
+                    else:
+                        break
                 else:
                     result.append(f"       {line}")
 
-        print('\n'.join(result))
+        print('\n'.join(result).strip())
 
 
 def test_is_table():
